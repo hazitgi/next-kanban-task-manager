@@ -14,17 +14,29 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
 
 const flagImage = {
   en: "/icons/en.svg",
-  gn: "/icons/gn.svg",
+  de: "/icons/gn.svg",
 };
 export default function Header() {
+  const router = useRouter();
+  const t = useTranslations("root");
+  const pathname = usePathname();
+  const locale = useLocale();
+  function changeLanguage(newLocale: "en" | "de"): void {
+    // langRouter.push(langRouter.pathname, langRouter.asPath, { locale });
+    const newPath = `/${newLocale}${pathname.replace(`/${locale}`, "")}`;
+    router.push(newPath);
+  }
+  
   return (
     <header className="h-full w-full p-7">
       <div className="w-full flex justify-between lg:items-center lg:flex-row flex-col items-start gap-2 lg:gap-0">
         <div className="flex flex-col">
-          <h3 className="text-lg">Active lads</h3>
+          <h3 className="text-lg">{t("activelads")}</h3>
           <div className="flex items-center gap-1">
             <div className="flex items-center">
               <div className="size-8 border rounded-full overflow-hidden bg-customeYellow"></div>
@@ -35,7 +47,7 @@ export default function Header() {
                 <Plus className="w-3 text-textDark" />
               </div>
               <div className="underline text-sm text-textDark">
-                <span>Add More</span>
+                <span>{t("addmore")}</span>
               </div>
             </button>
           </div>
@@ -47,7 +59,7 @@ export default function Header() {
             <input
               type="text"
               className="w-full h-full text-sm bg-transparent placeholder:text-textDark outline-none"
-              placeholder="Search..."
+              placeholder={`${t("search")}...`}
             />
             <button>
               <Search className="w-4 text-textYello" />
@@ -80,12 +92,17 @@ export default function Header() {
             <DropdownMenuTrigger className="h-12 px-3 rounded-xl border-textDark  ring-0 focus:ring-0  border bg-customeBg flex overflow-hidden items-center justify-center">
               <div className="relative">
                 <div className="overflow-hidden size-7  rounded-full">
-                  <Image alt="" src={flagImage["en"]} width={30} height={30} />
+                  <Image
+                    alt=""
+                    src={flagImage[locale as "en" | "de"]}
+                    width={40}
+                    height={40}
+                  />
                 </div>
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-customeBg">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => changeLanguage("en")}>
                 <div className="flex items-center gap-2">
                   <div>
                     <Image
@@ -98,12 +115,12 @@ export default function Header() {
                   <span>English</span>
                 </div>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => changeLanguage("de")}>
                 <div className="flex items-center gap-2">
                   <div>
                     <Image
                       alt=""
-                      src={flagImage["gn"]}
+                      src={flagImage["de"]}
                       width={18}
                       height={18}
                     />
