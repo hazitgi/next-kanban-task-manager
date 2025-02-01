@@ -1,4 +1,10 @@
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, FileEdit, Trash2Icon } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 export default function ColumnHeader({ title }: ColumnHeaderProp) {
   return (
@@ -10,9 +16,27 @@ export default function ColumnHeader({ title }: ColumnHeaderProp) {
         <div className="h-7 px-4 rounded-xl bg-customeDark flex-center">
           <span className="text-sm text-white">1</span>
         </div>
-        <button>
-          <Ellipsis />
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="ring-0 focus:ring-0">
+            <button>
+              <Ellipsis />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="bg-customeBg">
+            <DropdownMenuItem className="focus:bg-customeViolet/20 gap-2">
+              <div className="flex gap-2 items-center">
+                <FileEdit className="w-4 text-blue-500" />
+                <span className="text-sm">Edit</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="focus:bg-customeViolet/20 gap-2">
+              <div className="flex gap-2 items-center">
+                <Trash2Icon className="w-4 text-red-500" />
+                <span className="text-sm">Edit</span>
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
