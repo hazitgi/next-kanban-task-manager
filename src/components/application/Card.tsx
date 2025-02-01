@@ -10,7 +10,9 @@ export default function Card({
   description,
   files,
   id,
-}: Task) {
+  onDragEnter,
+  onDragLeave,
+}: TaskCardProp) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: id,
@@ -22,11 +24,15 @@ export default function Card({
         transform: `translate(${transform.x}px, ${transform.y}px)`,
         zIndex: 10,
       };
+
   return (
     <div
       ref={setNodeRef}
       {...listeners}
       {...attributes}
+      draggable
+      onDragEnter={onDragEnter ? onDragEnter : undefined}
+      onDragLeave={onDragLeave ? onDragLeave : undefined}
       className={cn("cursor-grab w-full p-5 rounded-xl bg-customeBg", {
         "border border-textDark shadow-md": isDragging,
       })}

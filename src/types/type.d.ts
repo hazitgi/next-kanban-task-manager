@@ -21,3 +21,8 @@ declare interface ColumnBodyProp {
   col: Column;
   tasks: Task[];
 }
+
+declare interface TaskCardProp extends Task {
+  onDragEnter?: (event?: DragEvent<HTMLElement>) => void;
+  onDragLeave?: (event?: DragEvent<HTMLDivElement>) => void;
+}

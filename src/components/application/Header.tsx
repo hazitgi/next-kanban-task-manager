@@ -70,13 +70,13 @@ export default function Header() {
               <SelectValue placeholder="All Time" />
             </SelectTrigger>
             <SelectContent className="bg-customeBg rounded-xl">
-              <SelectItem value="light" className="p-3">
+              <SelectItem value="light" className="px-3 py-2 focus:bg-customeViolet/20 gap-2">
                 Light
               </SelectItem>
-              <SelectItem value="dark" className="p-3">
+              <SelectItem value="dark" className="px-3 py-2 focus:bg-customeViolet/20 gap-2">
                 Dark
               </SelectItem>
-              <SelectItem value="system" className="p-3">
+              <SelectItem value="system" className="px-3 py-2 focus:bg-customeViolet/20 gap-2">
                 System
               </SelectItem>
             </SelectContent>
@@ -102,8 +102,8 @@ export default function Header() {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-customeBg">
-              <DropdownMenuItem onClick={() => changeLanguage("en")}>
-                <div className="flex items-center gap-2">
+              <DropdownMenuItem className="focus:bg-customeViolet/20 py-2 " onClick={() => changeLanguage("en")}>
+                <div className="flex items-center gap-2 ">
                   <div>
                     <Image
                       alt=""
@@ -115,7 +115,7 @@ export default function Header() {
                   <span>English</span>
                 </div>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => changeLanguage("de")}>
+              <DropdownMenuItem className="focus:bg-customeViolet/20 py-2" onClick={() => changeLanguage("de")}>
                 <div className="flex items-center gap-2">
                   <div>
                     <Image

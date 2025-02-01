@@ -4,21 +4,25 @@ import Card from "./Card";
 import { useTranslations } from "next-intl";
 import { useDroppable } from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 export default function Column({ col, tasks }: ColumnBodyProp) {
   const t = useTranslations("root");
   const { setNodeRef, isOver } = useDroppable({
     id: col.id,
   });
+  const [dragIndex, setDragIndex] = React.useState<undefined | number>();
   return (
-    <div key={col.id} className="flex space-x-4 min-w-max">
+    <div
+      ref={setNodeRef}
+      key={col.id}
+      className={cn("flex space-x-4 min-w-max ", {
+        " border border-textDark border-dashed p-3 transition-all shadow-md duration-200 rounded-lg ":
+          isOver,
+      })}
+    >
       {/* Example Kanban Boxes */}
-      <div
-        className={cn("w-[21rem] h-96  rounded-lg  ", {
-          " border border-textDark border-dashed p-2 transition-all shadow-md duration-200":
-            isOver,
-        })}
-      >
+      <div className={cn("w-[21rem] h-96  rounded-lg  ")}>
         <ColumnHeader {...col} />
         <div className="w-full flex-center h-9">
           <button className="flex gap-1 items-center">
@@ -30,17 +34,27 @@ export default function Column({ col, tasks }: ColumnBodyProp) {
             </div>
           </button>
         </div>
-        <div ref={setNodeRef} className="space-y-4">
+        <div className="space-y-4">
           {tasks?.length <= 0 && (
             <div className="w-full rounded-lg h-28 shadow-inner border-dashed border border-textDark bg-customeBg flex-center">
               <span>No Tasks</span>
             </div>
           )}
-          {tasks
-            .filter((task) => task.columnId == col.id)
-            .map((task) => {
-              return <Card {...task} key={task.id} />;
-            })}
+          {tasks.map((task, idx) => {
+            return (
+              <React.Fragment key={task.id}>
+                {dragIndex == idx && <div className={cn("w-full h-28 ")}></div>}
+
+                <Card
+                  onDragEnter={() => setDragIndex(idx)}
+                  onDragLeave={() => setDragIndex(undefined)}
+                  {...task}
+                  key={task.id}
+                />
+              </React.Fragment>
+            );
+          })}
+          {isOver && <div className="w-full h-56 "></div>}
         </div>
       </div>
     </div>
