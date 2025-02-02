@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
 import { Ellipsis, FileEdit, Trash2Icon } from "lucide-react";
@@ -18,6 +19,7 @@ export default function Card({
   _id,
   onDragEnter,
   onDragLeave,
+  onDeleteTask,
 }: TaskCardProp) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
@@ -77,10 +79,14 @@ export default function Card({
             <DropdownMenuItem
               asChild
               className="focus:bg-customeViolet/20 gap-2"
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                onDeleteTask && onDeleteTask();
+              }}
             >
               <div className="flex gap-2 items-center">
                 <Trash2Icon className="w-4 text-red-500" />
-                <span className="text-sm">Edit</span>
+                <span className="text-sm">Delete</span>
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>

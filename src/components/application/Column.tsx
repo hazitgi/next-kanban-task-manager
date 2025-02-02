@@ -28,15 +28,18 @@ import { z } from "zod";
 import { taskSchema } from "@/lib/form-schema/task.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
-import { createTask } from "@/app/actions/task.actions";
+import { createTask, deleteTask } from "@/app/actions/task.actions";
 import { ITask } from "@/lib/schema/task.schema";
+import { deleteColumn } from "@/app/actions/column.action";
 
 export default function Column({
   col,
   tasks,
   setTasks,
+  setColumn,
 }: ColumnBodyProp & {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  setColumn: React.Dispatch<React.SetStateAction<Column[]>>;
 }) {
   const t = useTranslations("root");
   const { setNodeRef, isOver } = useDroppable({
@@ -84,6 +87,36 @@ export default function Column({
       setLoading(false);
     }
   };
+
+  const handleTaskDeletion = async (taskId: string) => {
+    try {
+      const { status, message } = await deleteTask(taskId);
+      if (!status) {
+        toast.error(message);
+      } else {
+        setTasks((prev) => prev.filter((t) => t._id !== taskId) as Task[]);
+        toast.success("Task deleted successfully");
+      }
+    } catch (error: any) {
+      return toast.error(`${error.message}`);
+    }
+  };
+
+  const handleColumnDelete = async (colId: string) => {
+    try {
+      const { message, status } = await deleteColumn(colId);
+      if (!status) {
+        return toast.error(message);
+      } else {
+        setColumn((prev) => prev.filter((column) => column._id !== colId));
+        toast.success("Column deleted successfully");
+        // Redirect to the home page or any other page
+        // history.push("/");
+      }
+    } catch (error: any) {
+      return toast.error(`${error.message}`);
+    }
+  };
   return (
     <div
       ref={setNodeRef}
@@ -95,7 +128,7 @@ export default function Column({
     >
       {/* Example Kanban Boxes */}
       <div className={cn("w-[21rem] h-96  rounded-lg  ")}>
-        <ColumnHeader {...col} />
+        <ColumnHeader {...col} onDelete={() => handleColumnDelete(col._id as string)} />
         <div className="w-full flex-center h-9">
           <Credenza onOpenChange={setIsopen} open={isOpen}>
             <CredenzaTrigger asChild>
@@ -208,6 +241,7 @@ export default function Column({
                 <Card
                   onDragEnter={() => setDragIndex(idx)}
                   onDragLeave={() => setDragIndex(undefined)}
+                  onDeleteTask={() => handleTaskDeletion(task?._id as string)}
                   {...task}
                   key={task._id}
                 />

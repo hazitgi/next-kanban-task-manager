@@ -6,7 +6,7 @@ export interface ITask extends Document {
   title: string;
   description?: string;
   status?: "low" | "medium" | "high";
-  columnId: Types.ObjectId;
+  columnId: Types.ObjectId | string;
   dueDate?: Date;
   createdAt?: Date;
   updatedAt?: Date;

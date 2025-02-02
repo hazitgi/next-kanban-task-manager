@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import Column from "@/components/application/Column";
 import { getColumns } from "../actions/column.action";
-import { getAllTasks } from "../actions/task.actions";
+import { getAllTasks, updateTask } from "../actions/task.actions";
 import toast from "react-hot-toast";
 function Home() {
   // const COLUMNS: Column[] = [
@@ -116,7 +116,7 @@ function Home() {
     async function fetchColumns() {
       const { status, data, message } = await getColumns();
       if (status) {
-        setColumns(data as Column[]);
+        setColumns(data as unknown as Column[]);
       } else {
         toast.error(message);
       }
@@ -124,7 +124,7 @@ function Home() {
     async function fetchTasks() {
       const { status, data, message } = await getAllTasks();
       if (status) {
-        setTasks(data as Task[]);
+        setTasks(data as unknown as Task[]);
       } else {
         toast.error(message);
       }
@@ -132,7 +132,7 @@ function Home() {
     fetchColumns();
     fetchTasks();
   }, []);
-  function handleDrageEnd(event: DragEndEvent) {
+  async function handleDrageEnd(event: DragEndEvent) {
     const { active, over } = event;
     // alert(`tasks: ${over}`);
     if (!over) return;
@@ -140,16 +140,31 @@ function Home() {
     const taskId = active.id as string;
     const newColumnId = over.id as string;
 
+    const prevTask = tasks;
+    let payload: Task | null = null;
     setTasks(() =>
-      tasks.map((task) =>
-        task._id == taskId
-          ? {
-              ...task,
-              columnId: newColumnId,
-            }
-          : task
-      )
+      tasks.map((task) => {
+        if (task._id == taskId) {
+          payload = {
+            ...task,
+            columnId: newColumnId,
+          };
+          return payload;
+        } else {
+          return task;
+        }
+      })
     );
+    const { status, message } = await updateTask(
+      taskId,
+      payload as unknown as Task
+    );
+    if (!status) {
+      toast.error(message);
+      setTasks(prevTask); // Rollback the changes if the update fails.
+    } else {
+      toast.success("Task moved successfully.");
+    }
   }
 
   return (
@@ -161,6 +176,7 @@ function Home() {
             {columns?.map((col) => (
               <Column
                 setTasks={setTasks}
+                setColumn={setColumns}
                 key={col._id}
                 col={col}
                 tasks={tasks.filter((task) => task.columnId == col._id)}

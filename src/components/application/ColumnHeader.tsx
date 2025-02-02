@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-export default function ColumnHeader({ title }: ColumnHeaderProp) {
+export default function ColumnHeader({ title, onDelete }: ColumnHeaderProp) {
   return (
     <div className="w-full h-16 rounded-md bg-customeBg flex items-center pl-6 pr-2 justify-between">
       <div>
@@ -23,13 +23,20 @@ export default function ColumnHeader({ title }: ColumnHeaderProp) {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-customeBg">
-            <DropdownMenuItem asChild className="focus:bg-customeViolet/20 gap-2">
+            <DropdownMenuItem
+              asChild
+              className="focus:bg-customeViolet/20 gap-2"
+            >
               <button className="flex gap-2 items-center w-full">
                 <FileEdit className="w-4 text-blue-500" />
                 <span className="text-sm">Edit</span>
               </button>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild className="focus:bg-customeViolet/20 gap-2">
+            <DropdownMenuItem
+              onPointerDown={onDelete && onDelete}
+              asChild
+              className="focus:bg-customeViolet/20 gap-2"
+            >
               <div className="flex gap-2 items-center">
                 <Trash2Icon className="w-4 text-red-500" />
                 <span className="text-sm">Delete</span>

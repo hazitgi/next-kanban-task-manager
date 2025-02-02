@@ -17,6 +17,7 @@ declare interface Task {
 
 declare interface ColumnHeaderProp {
   title: string;
+  onDelete?: () => void;
 }
 
 declare interface ColumnBodyProp {
@@ -27,6 +28,7 @@ declare interface ColumnBodyProp {
 declare interface TaskCardProp extends Task {
   onDragEnter?: (event?: DragEvent<HTMLElement>) => void;
   onDragLeave?: (event?: DragEvent<HTMLDivElement>) => void;
+  onDeleteTask?: () => void;
 }
 
 declare interface TasksAndColumns {
