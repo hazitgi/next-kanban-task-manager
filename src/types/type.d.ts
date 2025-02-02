@@ -15,8 +15,7 @@ declare interface Task {
   columnId: string | number;
 }
 
-declare interface ColumnHeaderProp {
-  title: string;
+declare interface ColumnHeaderProp extends Column {
   onDelete?: () => void;
 }
 

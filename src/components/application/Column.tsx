@@ -128,7 +128,11 @@ export default function Column({
     >
       {/* Example Kanban Boxes */}
       <div className={cn("w-[21rem] h-96  rounded-lg  ")}>
-        <ColumnHeader {...col} onDelete={() => handleColumnDelete(col._id as string)} />
+        <ColumnHeader
+          {...col}
+          onDelete={() => handleColumnDelete(col._id as string)}
+          setColumn={setColumn}
+        />
         <div className="w-full flex-center h-9">
           <Credenza onOpenChange={setIsopen} open={isOpen}>
             <CredenzaTrigger asChild>
@@ -235,7 +239,7 @@ export default function Column({
           )}
           {tasks.map((task, idx) => {
             return (
-              <React.Fragment key={task._id}>
+              <React.Fragment key={String(task._id + "" + idx)}>
                 {dragIndex == idx && <div className={cn("w-full h-28 ")}></div>}
 
                 <Card

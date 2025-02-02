@@ -50,7 +50,7 @@ export default function Header({
               <div className="size-8 border rounded-full overflow-hidden -ml-2 bg-customeViolet"></div>
             </div>
 
-            <ColumnAddModal setColumns={setColumns} />
+            <ColumnAddModal type="add" data={null} setColumns={setColumns} />
           </div>
         </div>
 

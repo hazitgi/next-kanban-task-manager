@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Plus } from "lucide-react";
+import { FileEdit, Plus } from "lucide-react";
 import {
   Credenza,
   CredenzaBody,
@@ -16,12 +16,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import LoaderButton from "./LoaderButton";
 
 import toast from "react-hot-toast";
-import { useState } from "react";
-import { createColumn } from "@/app/actions/column.action";
+import { useEffect, useState } from "react";
+import { createColumn, updateColumn } from "@/app/actions/column.action";
 export default function ColumnAddModal({
   setColumns,
+  type = "add",
+  data,
 }: {
   setColumns: React.Dispatch<React.SetStateAction<Column[]>>;
+  type?: "add" | "edit";
+  data?: Column | null;
 }) {
   const t = useTranslations("root");
   type ColumnForm = z.infer<typeof colForm>;
@@ -29,6 +33,7 @@ export default function ColumnAddModal({
     register,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm<ColumnForm>({
     resolver: zodResolver(colForm),
     mode: "onChange",
@@ -39,16 +44,35 @@ export default function ColumnAddModal({
   const handleColumnAdd = async (values: ColumnForm) => {
     try {
       setLoading(true);
-      console.log(values);
-      const response = await createColumn(values.title);
+      if (type == "add") {
+        const response = await createColumn(values.title);
 
-      console.log(response);
-      if (response.status) {
-        toast.success("Column added successfully");
-        setColumns((prev) => [...prev, response.data] as Column[]);
-        setIsopen(false);
+        console.log(response);
+        if (response.status) {
+          toast.success("Column added successfully");
+          setColumns((prev) => [...prev, response.data] as Column[]);
+          setIsopen(false);
+        } else {
+          toast.error(response.message);
+        }
       } else {
-        toast.error(response.message);
+        const response = await updateColumn(String(data?._id), values.title);
+
+        if (response.status) {
+          setColumns((prev) => {
+            return prev.map((col) => {
+              if (col._id == data?._id) {
+                return { ...col, title: values.title };
+              } else {
+                return col;
+              }
+            });
+          });
+          toast.success("Column updated successfully");
+          setIsopen(false);
+        } else {
+          toast.error(response.message);
+        }
       }
     } catch (error: any) {
       return toast.error(error.message);
@@ -57,23 +81,42 @@ export default function ColumnAddModal({
     }
   };
   const [isOpen, setIsopen] = useState<boolean>(false);
+  useEffect(() => {
+    if (data) {
+      setValue("title", data?.title);
+    }
+  }, [data]);
   return (
     <Credenza onOpenChange={setIsopen} open={isOpen}>
       <CredenzaTrigger asChild>
-        <button className="flex gap-1 items-center">
-          <div className="size-5 rounded-md  border flex-center bg-customeViolet">
-            <Plus className="w-3 text-textDark" />
-          </div>
-          <div className="underline text-sm text-textDark">
-            <span>{t("addmore")}</span>
-          </div>
-        </button>
+        {type == "add" ? (
+          <button className="flex gap-1 items-center">
+            <div className="size-5 rounded-md  border flex-center bg-customeViolet">
+              <Plus className="w-3 text-textDark" />
+            </div>
+            <div className="underline text-sm text-textDark">
+              <span>{t("addmore")}</span>
+            </div>
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={() => setIsopen(true)}
+              className="flex gap-2 items-center w-full px-2 py-1 focus:bg-customeViolet/20 hover:bg-customeViolet/20 rounded-md"
+            >
+              <FileEdit className="w-4 text-blue-500" />
+              <span className="text-sm">Edit</span>
+            </button>
+          </>
+        )}
       </CredenzaTrigger>
       <CredenzaContent>
         <CredenzaTitle className="hidden">a</CredenzaTitle>
         <CredenzaBody>
           <div className="w-full">
-            <h2 className="text-lg font-semibold">Add new Column</h2>
+            <h2 className="text-lg font-semibold">
+              {type == "add" ? "Add new Column" : "Update Column"}
+            </h2>
             <form
               onSubmit={handleSubmit(handleColumnAdd)}
               className="w-full mt-2"

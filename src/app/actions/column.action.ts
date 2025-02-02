@@ -63,3 +63,15 @@ export async function deleteColumn(colId: string) {
     return { status: false, message: `${error.message}` };
   }
 }
+
+export async function updateColumn(colId: string, title: string) {
+  try {
+    await connectDB();
+    await ColumnModel.updateOne({ _id: colId }, { $set: { title: title } });
+
+    return { status: true, message: `Success` };
+  } catch (error: any) {
+    
+    return { status: false, message: `${error.message}` };
+  }
+}

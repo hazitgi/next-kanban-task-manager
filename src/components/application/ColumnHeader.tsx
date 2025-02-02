@@ -1,12 +1,20 @@
-import { Ellipsis, FileEdit, Trash2Icon } from "lucide-react";
+import { Ellipsis, Trash2Icon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import ColumnAddModal from "./col-addmodal";
 
-export default function ColumnHeader({ title, onDelete }: ColumnHeaderProp) {
+export default function ColumnHeader({
+  title,
+  _id,
+  onDelete,
+  setColumn,
+}: ColumnHeaderProp & {
+  setColumn: React.Dispatch<React.SetStateAction<Column[]>>;
+}) {
   return (
     <div className="w-full h-16 rounded-md bg-customeBg flex items-center pl-6 pr-2 justify-between">
       <div>
@@ -27,10 +35,15 @@ export default function ColumnHeader({ title, onDelete }: ColumnHeaderProp) {
               asChild
               className="focus:bg-customeViolet/20 gap-2"
             >
-              <button className="flex gap-2 items-center w-full">
+              {/* <button className="flex gap-2 items-center w-full">
                 <FileEdit className="w-4 text-blue-500" />
                 <span className="text-sm">Edit</span>
-              </button>
+              </button> */}
+              <ColumnAddModal
+                setColumns={setColumn}
+                data={{ title, _id }}
+                type="edit"
+              />
             </DropdownMenuItem>
             <DropdownMenuItem
               onPointerDown={onDelete && onDelete}
