@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model, Types } from "mongoose";
 
 // Define an interface for the Task document
 export interface ITask extends Document {
-  _id?: string;
+  _id: string;
   title: string;
   description?: string;
   status?: "low" | "medium" | "high";
