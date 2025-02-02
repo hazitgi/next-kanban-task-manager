@@ -99,15 +99,13 @@ export default function ColumnAddModal({
             </div>
           </button>
         ) : (
-          <>
-            <button
-              onClick={() => setIsopen(true)}
-              className="flex gap-2 items-center w-full px-2 py-1 focus:bg-customeViolet/20 hover:bg-customeViolet/20 rounded-md"
-            >
-              <FileEdit className="w-4 text-blue-500" />
-              <span className="text-sm">Edit</span>
-            </button>
-          </>
+          <button
+            onClick={() => setIsopen(true)}
+            className="flex gap-2 items-center w-full px-2 py-1 focus:bg-customeViolet/20 hover:bg-customeViolet/20 rounded-md"
+          >
+            <FileEdit className="w-4 text-blue-500" />
+            <span className="text-sm">Edit</span>
+          </button>
         )}
       </CredenzaTrigger>
       <CredenzaContent>

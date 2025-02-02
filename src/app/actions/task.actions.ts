@@ -46,7 +46,11 @@ export async function createTask(payload: ITask) {
 }
 
 export async function updateTask(taskId: string, payload: Task) {
+  console.log("🚀 ~ updateTask ~ payload:", payload)
+  console.log("🚀 ~ updateTask ~ taskId:", taskId)
   try {
+    
+    
     await connectDB();
     const updatedTask = await TaskModel.findOneAndUpdate(
       {

@@ -35,10 +35,7 @@ export default function ColumnHeader({
               asChild
               className="focus:bg-customeViolet/20 gap-2"
             >
-              {/* <button className="flex gap-2 items-center w-full">
-                <FileEdit className="w-4 text-blue-500" />
-                <span className="text-sm">Edit</span>
-              </button> */}
+              
               <ColumnAddModal
                 setColumns={setColumn}
                 data={{ title, _id }}

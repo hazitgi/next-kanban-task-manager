@@ -239,13 +239,14 @@ export default function Column({
           )}
           {tasks.map((task, idx) => {
             return (
-              <React.Fragment key={String(task._id + "" + idx)}>
+              <React.Fragment key={String(task._id)}>
                 {dragIndex == idx && <div className={cn("w-full h-28 ")}></div>}
 
                 <Card
                   onDragEnter={() => setDragIndex(idx)}
                   onDragLeave={() => setDragIndex(undefined)}
                   onDeleteTask={() => handleTaskDeletion(task?._id as string)}
+                  setTasks={setTasks}
                   {...task}
                   key={task._id}
                 />

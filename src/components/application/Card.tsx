@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
-import { Ellipsis, FileEdit, Trash2Icon } from "lucide-react";
+import { Ellipsis, Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import {
   DropdownMenu,
@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import UpdateTaskModal from "./update-task";
 
 export default function Card({
   comments,
@@ -16,11 +17,15 @@ export default function Card({
   title,
   description,
   files,
+  columnId,
   _id,
   onDragEnter,
   onDragLeave,
   onDeleteTask,
-}: TaskCardProp) {
+  setTasks,
+}: TaskCardProp & {
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+}) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: _id!,
@@ -68,12 +73,30 @@ export default function Card({
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-customeBg">
             <DropdownMenuItem
-              asChild
-              className="focus:bg-customeViolet/20 gap-2"
+              // asChild
+              className="focus:bg-customeViolet/20 gap-2 z-30 px-0 py-0"
+              onPointerDown={(e) => {
+                e.stopPropagation();
+              }}
             >
-              <div className="flex gap-2 items-center">
-                <FileEdit className="w-4 text-blue-500" />
-                <span className="text-sm">Edit</span>
+              <div
+                className="w-full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <UpdateTaskModal
+                  data={{
+                    _id,
+                    comments,
+                    status,
+                    title,
+                    description,
+                    files,
+                    columnId,
+                  }}
+                  setTasks={setTasks}
+                />
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem
