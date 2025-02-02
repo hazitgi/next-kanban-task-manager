@@ -26,12 +26,12 @@ export default function Column({ col, tasks }: ColumnBodyProp) {
         <ColumnHeader {...col} />
         <div className="w-full flex-center h-9">
           <button className="flex gap-1 items-center">
-            <div className="size-5 rounded-md  border flex-center bg-customeViolet">
+            <span className="size-5 rounded-md  border flex-center bg-customeViolet">
               <Plus className="w-3 text-textDark" />
-            </div>
-            <div className="underline text-sm text-textDark">
+            </span>
+            <span className="underline text-sm text-textDark">
               <span>{t("createtask")}</span>
-            </div>
+            </span>
           </button>
         </div>
         <div className="space-y-4">

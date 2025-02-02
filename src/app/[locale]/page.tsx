@@ -90,10 +90,7 @@ function Home() {
   ];
 
   const [tasks, setTasks] = useState<Task[]>(TASKS);
-  const [columns, setColumns] = useState<Column[]>(COLUMNS);
-  setColumns;
-  setTasks;
-  tasks;
+  const [columns] = useState<Column[]>(COLUMNS);
 
   function handleDrageEnd(event: DragEndEvent) {
     const { active, over } = event;

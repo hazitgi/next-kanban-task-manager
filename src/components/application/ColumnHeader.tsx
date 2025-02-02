@@ -17,19 +17,19 @@ export default function ColumnHeader({ title }: ColumnHeaderProp) {
           <span className="text-sm text-white">1</span>
         </div>
         <DropdownMenu>
-          <DropdownMenuTrigger className="ring-0 focus:ring-0">
+          <DropdownMenuTrigger asChild className="ring-0 focus:ring-0">
             <button>
               <Ellipsis />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-customeBg">
-            <DropdownMenuItem className="focus:bg-customeViolet/20 gap-2">
-              <div className="flex gap-2 items-center">
+            <DropdownMenuItem asChild className="focus:bg-customeViolet/20 gap-2">
+              <button className="flex gap-2 items-center">
                 <FileEdit className="w-4 text-blue-500" />
                 <span className="text-sm">Edit</span>
-              </div>
+              </button>
             </DropdownMenuItem>
-            <DropdownMenuItem className="focus:bg-customeViolet/20 gap-2">
+            <DropdownMenuItem asChild className="focus:bg-customeViolet/20 gap-2">
               <div className="flex gap-2 items-center">
                 <Trash2Icon className="w-4 text-red-500" />
                 <span className="text-sm">Edit</span>

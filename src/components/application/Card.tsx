@@ -1,7 +1,13 @@
 import { cn } from "@/lib/utils";
 import { useDraggable } from "@dnd-kit/core";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, FileEdit, Trash2Icon } from "lucide-react";
 import Image from "next/image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 export default function Card({
   comments,
@@ -39,7 +45,7 @@ export default function Card({
       style={style}
     >
       <div className="w-full flex items-center justify-between">
-        <div
+        <span
           className={cn(
             "h-6 capitalize px-2 flex-center rounded-md text-white text-sm",
             {
@@ -50,10 +56,35 @@ export default function Card({
           )}
         >
           {status}
-        </div>
-        <button>
-          <Ellipsis className="w-5" />
-        </button>
+        </span>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="ring-0 focus:ring-0">
+            <button>
+              <Ellipsis className="w-5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="bg-customeBg">
+            <DropdownMenuItem
+              asChild
+              className="focus:bg-customeViolet/20 gap-2"
+            >
+              <div className="flex gap-2 items-center">
+                <FileEdit className="w-4 text-blue-500" />
+                <span className="text-sm">Edit</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              asChild
+              className="focus:bg-customeViolet/20 gap-2"
+            >
+              <div className="flex gap-2 items-center">
+                <Trash2Icon className="w-4 text-red-500" />
+                <span className="text-sm">Edit</span>
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="w-full mt-1">
         <div className="w-full">
