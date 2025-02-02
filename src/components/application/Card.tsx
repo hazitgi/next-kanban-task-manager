@@ -15,13 +15,13 @@ export default function Card({
   title,
   description,
   files,
-  id,
+  _id,
   onDragEnter,
   onDragLeave,
 }: TaskCardProp) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
-      id: id,
+      id: _id!,
     });
 
   const style = !transform

@@ -24,7 +24,7 @@ export default function ColumnHeader({ title }: ColumnHeaderProp) {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-customeBg">
             <DropdownMenuItem asChild className="focus:bg-customeViolet/20 gap-2">
-              <button className="flex gap-2 items-center">
+              <button className="flex gap-2 items-center w-full">
                 <FileEdit className="w-4 text-blue-500" />
                 <span className="text-sm">Edit</span>
               </button>
@@ -32,7 +32,7 @@ export default function ColumnHeader({ title }: ColumnHeaderProp) {
             <DropdownMenuItem asChild className="focus:bg-customeViolet/20 gap-2">
               <div className="flex gap-2 items-center">
                 <Trash2Icon className="w-4 text-red-500" />
-                <span className="text-sm">Edit</span>
+                <span className="text-sm">Delete</span>
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>

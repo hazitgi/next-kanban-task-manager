@@ -1,5 +1,5 @@
 "use client";
-import { Bell, Plus, Search } from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -17,11 +17,18 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 
+import ColumnAddModal from "./col-addmodal";
+import React, { SetStateAction } from "react";
+
 const flagImage = {
   en: "/icons/en.svg",
   de: "/icons/gn.svg",
 };
-export default function Header() {
+export default function Header({
+  setColumns,
+}: {
+  setColumns: React.Dispatch<SetStateAction<Column[]>>;
+}) {
   const router = useRouter();
   const t = useTranslations("root");
   const pathname = usePathname();
@@ -31,7 +38,7 @@ export default function Header() {
     const newPath = `/${newLocale}${pathname.replace(`/${locale}`, "")}`;
     router.push(newPath);
   }
-  
+
   return (
     <header className="h-full w-full p-7">
       <div className="w-full flex justify-between lg:items-center lg:flex-row flex-col items-start gap-2 lg:gap-0">
@@ -42,14 +49,8 @@ export default function Header() {
               <div className="size-8 border rounded-full overflow-hidden bg-customeYellow"></div>
               <div className="size-8 border rounded-full overflow-hidden -ml-2 bg-customeViolet"></div>
             </div>
-            <button className="flex gap-1 items-center">
-              <div className="size-5 rounded-md  border flex-center bg-customeViolet">
-                <Plus className="w-3 text-textDark" />
-              </div>
-              <div className="underline text-sm text-textDark">
-                <span>{t("addmore")}</span>
-              </div>
-            </button>
+
+            <ColumnAddModal setColumns={setColumns} />
           </div>
         </div>
 
@@ -70,13 +71,22 @@ export default function Header() {
               <SelectValue placeholder="All Time" />
             </SelectTrigger>
             <SelectContent className="bg-customeBg rounded-xl">
-              <SelectItem value="light" className="px-3 py-2 focus:bg-customeViolet/20 gap-2">
+              <SelectItem
+                value="light"
+                className="px-3 py-2 focus:bg-customeViolet/20 gap-2"
+              >
                 Light
               </SelectItem>
-              <SelectItem value="dark" className="px-3 py-2 focus:bg-customeViolet/20 gap-2">
+              <SelectItem
+                value="dark"
+                className="px-3 py-2 focus:bg-customeViolet/20 gap-2"
+              >
                 Dark
               </SelectItem>
-              <SelectItem value="system" className="px-3 py-2 focus:bg-customeViolet/20 gap-2">
+              <SelectItem
+                value="system"
+                className="px-3 py-2 focus:bg-customeViolet/20 gap-2"
+              >
                 System
               </SelectItem>
             </SelectContent>
@@ -102,7 +112,10 @@ export default function Header() {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-customeBg">
-              <DropdownMenuItem className="focus:bg-customeViolet/20 py-2 " onClick={() => changeLanguage("en")}>
+              <DropdownMenuItem
+                className="focus:bg-customeViolet/20 py-2 "
+                onClick={() => changeLanguage("en")}
+              >
                 <div className="flex items-center gap-2 ">
                   <div>
                     <Image
@@ -115,7 +128,10 @@ export default function Header() {
                   <span>English</span>
                 </div>
               </DropdownMenuItem>
-              <DropdownMenuItem className="focus:bg-customeViolet/20 py-2" onClick={() => changeLanguage("de")}>
+              <DropdownMenuItem
+                className="focus:bg-customeViolet/20 py-2"
+                onClick={() => changeLanguage("de")}
+              >
                 <div className="flex items-center gap-2">
                   <div>
                     <Image
