@@ -132,6 +132,7 @@ export default function Column({
           {...col}
           onDelete={() => handleColumnDelete(col._id as string)}
           setColumn={setColumn}
+          taskLength={tasks.length}
         />
         <div className="w-full flex-center h-9">
           <Credenza onOpenChange={setIsopen} open={isOpen}>

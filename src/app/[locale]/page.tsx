@@ -9,106 +9,8 @@ import Column from "@/components/application/Column";
 import { getColumns } from "../actions/column.action";
 import { getAllTasks, updateTask } from "../actions/task.actions";
 import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
 function Home() {
-  // const COLUMNS: Column[] = [
-  //   {
-  //     id: "titl1",
-  //     title: "Todo",
-  //   },
-  //   {
-  //     id: "titl2",
-  //     title: "In Progress",
-  //   },
-  //   {
-  //     id: "titl3",
-  //     title: "Completed",
-  //   },
-  //   {
-  //     id: "titl4",
-  //     title: "Archived",
-  //   },
-  // ];
-
-  // const TASKS: Task[] = [
-  //   {
-  //     id: "task1",
-  //     title: "Task 1",
-  //     description:
-  //       "Task description but it is only displaying a maximum of 150 letters...",
-  //     status: "low",
-  //     comments: 12,
-  //     files: 0,
-  //     columnId: "titl1",
-  //   },
-  //   {
-  //     id: "task2",
-  //     title: "Task 2",
-  //     description:
-  //       "Task description but it is only displaying a maximum of 150 letters...",
-  //     status: "medium",
-  //     comments: 3,
-  //     files: 2,
-  //     columnId: "titl2",
-  //   },
-  //   {
-  //     id: "task3",
-  //     title: "Task 3",
-  //     description:
-  //       "Task description but it is only displaying a maximum of 150 letters...",
-  //     status: "high",
-  //     comments: 0,
-  //     files: 0,
-  //     columnId: "titl3",
-  //   },
-  //   {
-  //     id: "task4",
-  //     title: "Task 4",
-  //     description:
-  //       "Task description but it is only displaying a maximum of 150 letters...",
-  //     status: "low",
-  //     comments: 0,
-  //     files: 0,
-  //     columnId: "titl4",
-  //   },
-  //   {
-  //     id: "task5",
-  //     title: "Task 5",
-  //     description:
-  //       "Task description but it is only displaying a maximum of 150 letters...",
-  //     status: "medium",
-  //     comments: 0,
-  //     files: 0,
-  //     columnId: "titl4",
-  //   },
-  //   {
-  //     id: "task6",
-  //     title: "Task 6",
-  //     description:
-  //       "Task description but it is only displaying a maximum of 150 letters...",
-  //     status: "high",
-  //     comments: 0,
-  //     files: 0,
-  //     columnId: "titl4",
-  //   },
-  // ];
-
-  // const transformedData: TasksAndColumns = COLUMNS.map((column) => ({
-  //   column: {
-  //     title: column.title,
-  //     _id: column.id, // Simulating MongoDB ObjectId
-  //     createdAt: new Date().toISOString(),
-  //     updatedAt: new Date().toISOString(),
-  //   },
-  //   tasks: TASKS.filter((task) => task.columnId === column.id).map((task) => ({
-  //     _id: task.id, // Simulating MongoDB ObjectId
-  //     title: task.title,
-  //     description: task.description,
-  //     status: task.status,
-  //     dueDate: new Date().toISOString(), // Simulating a due date
-  //     createdAt: new Date().toISOString(),
-  //     updatedAt: new Date().toISOString(),
-  //   })),
-  // }));
   const [tasks, setTasks] = useState<Task[]>([]);
   const [columns, setColumns] = useState<Column[]>([]);
 
@@ -121,17 +23,28 @@ function Home() {
         toast.error(message);
       }
     }
+
+    fetchColumns();
+  }, []);
+
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const searchKey = searchParams.get("search") || "";
+    const date = searchParams.get("date");
     async function fetchTasks() {
-      const { status, data, message } = await getAllTasks();
+      const { status, data, message } = await getAllTasks(
+        searchKey,
+        date as "alltime" | "today" | "lastmonth" | "lastweek"
+      );
       if (status) {
         setTasks(data as unknown as Task[]);
       } else {
         toast.error(message);
       }
     }
-    fetchColumns();
+
     fetchTasks();
-  }, []);
+  }, [searchParams]);
   async function handleDrageEnd(event: DragEndEvent) {
     const { active, over } = event;
     // alert(`tasks: ${over}`);

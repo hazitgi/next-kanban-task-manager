@@ -15,7 +15,7 @@ import {
 } from "../ui/dropdown-menu";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import ColumnAddModal from "./col-addmodal";
 import React, { SetStateAction } from "react";
@@ -38,7 +38,33 @@ export default function Header({
     const newPath = `/${newLocale}${pathname.replace(`/${locale}`, "")}`;
     router.push(newPath);
   }
+  const searchParams = useSearchParams();
 
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const param = new URLSearchParams(searchParams.toString()); // Clone existing search params
+    const searchValue = event.target.value.trim();
+
+    if (searchValue) {
+      param.set("search", searchValue); // Set search query
+    } else {
+      param.delete("search"); // Remove search if empty
+    }
+
+    router.replace(`${pathname}?${param.toString()}`); // Update URL without reload
+  };
+
+  const handleDateFilter = (
+    value: "alltime" | "today" | "lastmonth" | "lastweek"
+  ) => {
+    const param = new URLSearchParams(searchParams.toString());
+    const filterValue = value.trim();
+    if (filterValue) {
+      param.set("date", filterValue); // Set date filter
+    } else {
+      param.delete("date"); // Remove date filter if empty
+    }
+    router.replace(`${pathname}?${param.toString()}`); // Update URL without reload
+  };
   return (
     <header className="h-full w-full p-7">
       <div className="w-full flex justify-between lg:items-center lg:flex-row flex-col items-start gap-2 lg:gap-0">
@@ -59,6 +85,7 @@ export default function Header({
           <div className="h-12 pr-3 pl-5 rounded-xl border-textDark w-56 border bg-customeBg flex overflow-hidden items-center">
             <input
               type="text"
+              onChange={handleSearch}
               className="w-full h-full text-sm bg-transparent placeholder:text-textDark outline-none"
               placeholder={`${t("search")}...`}
             />
@@ -66,28 +93,41 @@ export default function Header({
               <Search className="w-4 text-textYello" />
             </button>
           </div>
-          <Select>
+          <Select onValueChange={handleDateFilter}>
             <SelectTrigger className="h-12 pr-3 pl-5 rounded-xl border-textDark w-[120px] ring-0 focus:ring-0  border bg-customeBg flex overflow-hidden items-center">
-              <SelectValue placeholder="All Time" />
+              <SelectValue
+                className="capitalize"
+                placeholder={
+                  searchParams.get("date")
+                    ? searchParams.get("date")
+                    : "All Time"
+                }
+              />
             </SelectTrigger>
             <SelectContent className="bg-customeBg rounded-xl">
               <SelectItem
-                value="light"
+                value="alltime"
                 className="px-3 py-2 focus:bg-customeViolet/20 gap-2"
               >
-                Light
+                All Time
               </SelectItem>
               <SelectItem
-                value="dark"
+                value="today"
                 className="px-3 py-2 focus:bg-customeViolet/20 gap-2"
               >
-                Dark
+                Today
               </SelectItem>
               <SelectItem
-                value="system"
+                value="lastweek"
                 className="px-3 py-2 focus:bg-customeViolet/20 gap-2"
               >
-                System
+                Last week
+              </SelectItem>
+              <SelectItem
+                value="lastmonth"
+                className="px-3 py-2 focus:bg-customeViolet/20 gap-2"
+              >
+                Last Month
               </SelectItem>
             </SelectContent>
           </Select>

@@ -3,8 +3,8 @@
 import { connectDB } from "@/lib/db.config";
 import { ColumnModel } from "@/lib/schema/column.schema";
 import { ITask, TaskModel } from "@/lib/schema/task.schema";
+import { startOfDay, subDays, subMonths } from "date-fns";
 import mongoose from "mongoose";
-
 // Helper function to convert MongoDB document to plain object
 const toPlainObject = (doc: any) => {
   if (!doc) return null;
@@ -46,11 +46,9 @@ export async function createTask(payload: ITask) {
 }
 
 export async function updateTask(taskId: string, payload: Task) {
-  console.log("🚀 ~ updateTask ~ payload:", payload)
-  console.log("🚀 ~ updateTask ~ taskId:", taskId)
+  console.log("🚀 ~ updateTask ~ payload:", payload);
+  console.log("🚀 ~ updateTask ~ taskId:", taskId);
   try {
-    
-    
     await connectDB();
     const updatedTask = await TaskModel.findOneAndUpdate(
       {
@@ -87,10 +85,43 @@ export async function deleteTask(taskId: string) {
   }
 }
 
-export async function getAllTasks() {
+export async function getAllTasks(
+  searchQuery: string,
+  date?: "alltime" | "today" | "lastmonth" | "lastweek"
+) {
   try {
     await connectDB();
+
+    const matchConditions: any = {
+      $or: [
+        { title: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in title
+        { description: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in description
+      ],
+    };
+
+    // Apply date filtering if a date filter is provided
+    if (date && date !== "alltime") {
+      let startDate: Date | null = null;
+
+      switch (date) {
+        case "today":
+          startDate = startOfDay(new Date());
+          break;
+        case "lastweek":
+          startDate = subDays(new Date(), 7);
+          break;
+        case "lastmonth":
+          startDate = subMonths(new Date(), 1);
+          break;
+      }
+
+      if (startDate) {
+        matchConditions.createdAt = { $gte: startDate };
+      }
+    }
+
     const tasks = await TaskModel.aggregate([
+      { $match: matchConditions },
       {
         $lookup: {
           from: ColumnModel.collection.name,
@@ -99,9 +130,7 @@ export async function getAllTasks() {
           as: "column",
         },
       },
-      {
-        $unwind: "$column",
-      },
+      { $unwind: "$column" },
     ]).exec();
 
     const plainTasks = tasks.map((task) => ({

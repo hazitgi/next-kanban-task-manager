@@ -12,8 +12,10 @@ export default function ColumnHeader({
   _id,
   onDelete,
   setColumn,
+  taskLength,
 }: ColumnHeaderProp & {
   setColumn: React.Dispatch<React.SetStateAction<Column[]>>;
+  taskLength: number;
 }) {
   return (
     <div className="w-full h-16 rounded-md bg-customeBg flex items-center pl-6 pr-2 justify-between">
@@ -22,7 +24,7 @@ export default function ColumnHeader({
       </div>
       <div className="flex gap-2 items-center">
         <div className="h-7 px-4 rounded-xl bg-customeDark flex-center">
-          <span className="text-sm text-white">1</span>
+          <span className="text-sm text-white">{taskLength}</span>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="ring-0 focus:ring-0">
@@ -35,7 +37,6 @@ export default function ColumnHeader({
               asChild
               className="focus:bg-customeViolet/20 gap-2"
             >
-              
               <ColumnAddModal
                 setColumns={setColumn}
                 data={{ title, _id }}
